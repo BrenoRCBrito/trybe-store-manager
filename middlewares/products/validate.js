@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const { getNames } = require('../../services/products');
+// const { getNames } = require('../../services/products');
 const validate = require('../../services/validate');
 
 const names = [
