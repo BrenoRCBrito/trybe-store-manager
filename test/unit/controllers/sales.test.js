@@ -110,3 +110,45 @@ describe('Get and returns all sales', () => {
     expect(response.json.calledWith(destrucSales.map(serialize))).to.be.equal(true);
   })
 })
+
+describe('Get and return a sales by id', () => {
+
+  const response = {};
+  const request = {};
+  const id = 1;
+
+  const sales = [
+    { date: '2022-03-03T14:38:00.000Z', product_id: 1, quantity: 5 },
+    { date: '2022-03-03T14:38:00.000Z', product_id: 2, quantity: 10 }
+  ];
+  const [destrucSales] = sales; 
+
+
+  before(async () => {
+    request.body = {};
+    request.params = {id:id};
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+
+    const execute = sales;
+    sinon.stub(connection, 'execute').resolves(sales.map(serialize));
+
+    sinon.stub(salesServices, 'getByID').resolves(sales.map(serialize));
+  })
+
+  after(async () => {
+    connection.execute.restore();
+    salesServices.getByID.restore();
+  });
+
+  it('then returns status 200', async () => {
+    await get.byId(request, response);
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  })
+
+  it('return an array', async () => {
+    await get.byId(request, response);
+
+    expect(response.json.calledWith(sales.map(serialize))).to.be.equal(true);
+  })
+})

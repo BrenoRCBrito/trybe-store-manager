@@ -15,6 +15,7 @@ async function getByID(id) {
 async function getNames() {
   const query = 'SELECT name FROM StoreManager.products';
   const [names] = await connection.execute(query);
+  console.log(names.map((n) => n.name));
   return names.map((n) => n.name);
 }
 

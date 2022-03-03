@@ -27,6 +27,7 @@ async function getByID(id) {
   FROM sales AS s INNER JOIN sales_products AS sp 
   ON s.id = sp.sale_id WHERE s.id = ? ORDER BY sale_id ASC, product_id ASC`;
   const [sale] = await connection.execute(query, [id]);
+  console.log(sale);
   return sale.map(serialize);
 }
 

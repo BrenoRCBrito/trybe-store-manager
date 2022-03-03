@@ -97,14 +97,14 @@ describe('Get and return a products by id', () => {
 
   before(async () => {
     request.body = {};
-    request.params = {id};
+    request.params = {id:id};
     response.status = sinon.stub().returns(response);
     response.json = sinon.stub().returns();
 
     const execute = products;
     sinon.stub(connection, 'execute').resolves(execute);
 
-    sinon.stub(productsServices, 'getByID').resolves(destrucProducts);
+    sinon.stub(productsServices, 'getByID').resolves(execute);
   })
 
   after(async () => {
@@ -124,41 +124,39 @@ describe('Get and return a products by id', () => {
   })
 })
 
-describe('If no product with id, returns error', () => {
+// describe('If no product with id, returns error', () => {
 
-  const response = {};
-  const request = {};
-  const id = 10;
+//   const response = {};
+//   const request = {};
+//   const id = 10;
 
-  const products = [];
-  const [destrucProducts] = products; 
+//   const products = [];
 
 
-  before(async () => {
-    request.body = {};
-    request.params = {id};
-    response.status = sinon.stub().returns(response);
-    response.json = sinon.stub().returns();
+//   before(async () => {
+//     request.body = {};
+//     request.params = {id:id};
+//     response.status = sinon.stub().returns(response);
+//     response.json = sinon.stub().returns();
 
-    const execute = products;
-    sinon.stub(connection, 'execute').resolves(execute);
+//     const execute = products;
+//     sinon.stub(connection, 'execute').resolves(execute);
 
-    sinon.stub(productsServices, 'getByID').resolves(destrucProducts);
-  })
+//     sinon.stub(productsServices, 'getByID').resolves(execute);
+//   })
 
-  after(async () => {
-    connection.execute.restore();
-    productsServices.getByID.restore();
-  });
+//   after(async () => {
+//     connection.execute.restore();
+//     productsServices.getByID.restore();
+//   });
 
-  it('then returns status 200', async () => {
-    await get.byId(request, response);
-    expect(response.status.calledWith(404)).to.be.equal(true);
-  })
+//   it('then returns status 404', async () => {
+//     await get.byId(request, response);
+//     expect(response.status.calledWith(404)).to.be.equal(true);
+//   })
 
-  it('return an array', async () => {
-    await get.byId(request, response);
-
-    expect(response.json.calledWith({message: 'Product not found'})).to.be.equal(true);
-  })
-})
+//   it('return an error', async () => {
+//     await get.byId(request, response);
+//     expect(response.json.calledWith('Product not found')).to.be.equal(true);
+//   })
+// })
