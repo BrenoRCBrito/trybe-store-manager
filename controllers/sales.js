@@ -1,16 +1,62 @@
-const router = require('express').Router();
-const rescue = require('express-rescue');
-const get = require('../middlewares/sales/get');
-const validate = require('../middlewares/sales/validate');
-const add = require('../middlewares/sales/add');
-const update = require('../middlewares/sales/update');
+const salesService = require("../services/sales");
+const productsService = require("../services/products");
 
-router.get('', rescue(get.all));
+const validateQuantity = async (req, _res, next) => {
+  const products = await Promise.all(
+    req.body.map(async (sale) => productsService.getById(sale.productId))
+  );
+  try {
+    products.forEach((product, i) => {
+      if (req.body[i].quantity > product.quantity) {
+        const quantityError = {
+          status: 422,
+          message: "Such amount is not permitted to sell",
+        };
+        throw quantityError;
+      }
+    });
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+};
 
-router.get('/:id', rescue(get.byId));
+const getAll = async (_req, res, _next) => {
+  const sales = await salesService.getAll();
+  return res.status(200).json(sales);
+};
 
-router.post('', validate.productId, validate.productQuantity, add);
+const getById = async (req, res, next) => {
+  const { id } = req.params;
+  const sales = await salesService.getById(id);
+  const [sale] = sales;
+  if (!sale) {
+    return next({ status: 404, message: "Sale not found" });
+  }
+  return res.status(200).json(sales);
+};
 
-router.put('/:id', validate.productId, validate.productQuantity, update);
+const create = async (req, res, _next) => {
+  const insertedSale = await salesService.create(req.body);
+  return res.status(201).json(insertedSale);
+};
 
-module.exports = router;
+const update = async (req, res, _next) => {
+  const { id } = req.params;
+  const [{ quantity, productId }] = req.body;
+  console.log(req.body);
+  console.log(quantity, productId);
+  const updatedSale = await salesService.update(quantity, id, productId);
+  return res.status(200).json(updatedSale);
+};
+
+const destroy = async (req, res, next) => {
+  const { id } = req.params;
+  const successfulDestruction = await salesService.destroy(id);
+  if (!successfulDestruction) {
+    return next({ status: 404, message: "Sale not found" });
+  }
+  return res.status(204).end();
+};
+
+module.exports = { getAll, getById, create, update, destroy, validateQuantity };

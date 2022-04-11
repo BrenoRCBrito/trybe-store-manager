@@ -1,19 +1,47 @@
-const router = require('express').Router();
-const rescue = require('express-rescue');
-const add = require('../middlewares/products/add');
-const get = require('../middlewares/products/get');
-const update = require('../middlewares/products/update');
-const validate = require('../middlewares/products/validate');
-const remove = require('../middlewares/products/remove');
+const productsService = require("../services/products");
 
-router.get('', rescue(get.all));
+const getAll = async (_req, res, _next) => {
+  const products = await productsService.getAll();
+  return res.status(200).json(products);
+};
 
-router.get('/:id', rescue(get.byId));
+const getById = async (req, res, next) => {
+  const { id } = req.params;
+  const product = await productsService.getById(id);
+  if (!product) {
+    return next({ status: 404, message: "Product not found" });
+  }
+  return res.status(200).json(product);
+};
 
-router.post('', validate.productName, validate.productQuantity, add);
+const create = async (req, res, next) => {
+  const { name, quantity } = req.body;
+  const alreadyExist = Boolean(await productsService.getByName(name));
+  if (alreadyExist) {
+    return next({ status: 409, message: "Product already exists" });
+  }
+  const insertedProduct = await productsService.create(name, quantity);
+  return res.status(201).json(insertedProduct);
+};
 
-router.put('/:id', validate.productName, validate.productQuantity, update);
+const update = async (req, res, next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const productBeforeUpdate = await productsService.getById(id);
+  if (!productBeforeUpdate) {
+    return next({ status: 404, message: "Product not found" });
+  }
+  const updatedProduct = await productsService.update(id, name, quantity);
+  return res.status(200).json(updatedProduct);
+};
 
-router.delete('/:id', remove);
+const destroy = async (req, res, next) => {
+  const { id } = req.params;
+  const successfulDestruction = await productsService.destroy(id);
+  if (!successfulDestruction) {
+    return next({ status: 404, message: "Product not found" });
+  }
+  return res.status(204).end();
+};
 
-module.exports = router;
+module.exports = { getAll, getById, create, update, destroy };

@@ -1,20 +1,14 @@
-const salesModel = require('../models/sales');
+const salesModel = require("../models/sales");
 
-const getAll = async () => {
-  const sales = await salesModel.getAll();
-  return sales;
-};
+const getAll = async () => salesModel.getAll();
 
-const getByID = async (id) => {
-  const sale = await salesModel.getByID(id);
-  return sale;
-};
+const getById = async (id) => salesModel.getById(id);
 
-const getLastSaleId = async () => salesModel.getLastSaleId();
+const create = async (sales) => salesModel.create(sales);
 
-const add = async (id, sales) => salesModel.add(id, sales);
+const update = async (quantity, saleId, productId) =>
+  salesModel.update(quantity, saleId, productId);
 
-const update = async (quantity, saleId, productId) => salesModel
-.update(quantity, saleId, productId);
+const destroy = async (id) => salesModel.destroy(id);
 
-module.exports = { getAll, getByID, getLastSaleId, add, update };
+module.exports = { getAll, getById, create, update, destroy };

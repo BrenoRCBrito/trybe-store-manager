@@ -61,11 +61,9 @@ describe("11-updateQuantity", () => {
     });
 
     it("Será validado que é possível atualizar a quantidade do produto ao deletar uma compra", async () => {
-      await frisby
-        .delete(`${url}/sales/${insertedId}`)
-        .expect("status", 204);
+      await frisby.delete(`${url}/sales/${insertedId}`).expect("status", 204);
 
-        await frisby
+      await frisby
         .get(`${url}/products/1`)
         .expect("status", 200)
         .then((response) => {
@@ -75,4 +73,4 @@ describe("11-updateQuantity", () => {
         });
     });
   });
-})
+});

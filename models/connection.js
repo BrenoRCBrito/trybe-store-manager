@@ -1,15 +1,8 @@
-const mysql = require('mysql2/promise');
+const { createPool } = require("mysql2/promise");
+require("dotenv").config();
 
-module.exports = mysql.createPool({
+module.exports = createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  database: 'StoreManager',
 });
-
-// module.exports = mysql.createPool({
-//   host: 'localhost',
-//   user: 'brcb',
-//   password: '',
-//   database: 'StoreManager',
-// });

@@ -1,37 +1,47 @@
-const connection = require('./connection');
+const connection = require("./connection");
 
-async function getAll() {
-  const query = 'SELECT id, name, quantity FROM StoreManager.products ORDER BY id ASC';
+const getAll = async () => {
+  const query =
+    "SELECT id, name, quantity FROM StoreManager.products ORDER BY id ASC";
   const [products] = await connection.execute(query);
   return products;
-}
+};
 
-async function getByID(id) {
-  const query = 'SELECT id, name, quantity FROM StoreManager.products WHERE id = ?';
-  const [product] = await connection.execute(query, [id]);
+const getById = async (id) => {
+  const query =
+    "SELECT id, name, quantity FROM StoreManager.products WHERE id = ?";
+  const [[product]] = await connection.execute(query, [id]);
   return product;
-}
+};
 
-async function getNames() {
-  const query = 'SELECT name FROM StoreManager.products';
-  const [names] = await connection.execute(query);
-  console.log(names.map((n) => n.name));
-  return names.map((n) => n.name);
-}
+const getByName = async (name) => {
+  const query =
+    "SELECT id, name, quantity FROM StoreManager.products WHERE name = ?";
+  const [[product]] = await connection.execute(query, [name]);
+  return product;
+};
 
-async function add(name, quantity) {
-  const query = 'INSERT INTO StoreManager.products (name, quantity) VAlUES (?, ?)';
-  await connection.execute(query, [name, quantity]);
-}
+const create = async (name, quantity) => {
+  const query =
+    "INSERT INTO StoreManager.products (name, quantity) VAlUES (?, ?)";
+  const [{ insertId: id }] = await connection.execute(query, [name, quantity]);
+  const insertedProduct = { id, name, quantity };
+  return insertedProduct;
+};
 
-async function update(name, quantity, id) {
-  const query = 'UPDATE StoreManager.products SET name = ?, quantity = ? WHERE id = ?';
+const update = async (id, name, quantity) => {
+  const query =
+    "UPDATE StoreManager.products SET name = ?, quantity = ? WHERE id = ?";
   await connection.execute(query, [name, quantity, id]);
-}
+  const updatedProduct = { id, name, quantity };
+  return updatedProduct;
+};
 
-async function remove(id) {
-  const query = 'DELETE FROM StoreManager.products WHERE id = ?';
-  await connection.execute(query, [id]);
-}
+const destroy = async (id) => {
+  const query = "DELETE FROM StoreManager.products WHERE id = ?";
+  const [{ affectedRows }] = await connection.execute(query, [id]);
+  const successfulDestruction = Boolean(affectedRows);
+  return successfulDestruction;
+};
 
-module.exports = { getAll, getByID, getNames, add, update, remove };
+module.exports = { getAll, getById, getByName, create, update, destroy };

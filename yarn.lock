@@ -1992,6 +1992,11 @@ eslint-config-airbnb@^18.2.1:
     object.assign "^4.1.2"
     object.entries "^1.1.2"
 
+eslint-config-prettier@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz#5a81680ec934beca02c7b1a61cf8ca34b66feab1"
+  integrity sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==
+
 eslint-config-trybe-backend@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/eslint-config-trybe-backend/-/eslint-config-trybe-backend-1.0.4.tgz#b1259b753b5a5d53ee94672456e275dcd5382714"
