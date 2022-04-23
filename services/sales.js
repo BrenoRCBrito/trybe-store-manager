@@ -1,4 +1,4 @@
-const salesModel = require("../models/sales");
+const salesModel = require('../models/sales');
 
 const getAll = async () => salesModel.getAll();
 

@@ -1,4 +1,4 @@
-const connection = require("./connection");
+const connection = require('./connection');
 
 const serialize = (sales) => {
   if (sales.sale_id) {
@@ -33,15 +33,14 @@ const getById = async (id) => {
 };
 
 const create = async (sales) => {
-  const query1 = "INSERT INTO StoreManager.sales () VALUES ()";
+  const query1 = 'INSERT INTO StoreManager.sales () VALUES ()';
   const [insertedSale] = await connection.execute(query1);
   const { insertId: id } = insertedSale;
   const query2 = `INSERT INTO StoreManager.sales_products
    (sale_id, product_id, quantity) VALUES(?, ?, ?)`;
   sales.forEach(async (sale) => {
     await connection.execute(query2, [id, sale.productId, sale.quantity]);
-    const query3 =
-      "UPDATE StoreManager.products SET quantity = quantity - ? WHERE id = ?";
+    const query3 = 'UPDATE StoreManager.products SET quantity = quantity - ? WHERE id = ?';
     await connection.execute(query3, [sale.quantity, sale.productId]);
   });
   return { id, itemsSold: [...sales] };
@@ -55,21 +54,20 @@ const update = async (quantity, saleId, productId) => {
 };
 
 const destroy = async (id) => {
-  const query1 =
-    "SELECT sale_id, product_id, quantity FROM StoreManager.sales_products WHERE sale_id = ?";
+  const query1 = `SELECT sale_id, product_id, quantity 
+  FROM StoreManager.sales_products WHERE sale_id = ?`;
   const [salesProducts] = await connection.execute(query1, [id]);
   salesProducts.forEach(async (salesProduct) => {
-    const query2 =
-      "UPDATE StoreManager.products SET quantity = quantity + ? WHERE id = ?";
+    const query2 = 'UPDATE StoreManager.products SET quantity = quantity + ? WHERE id = ?';
     await connection.execute(query2, [
       salesProduct.quantity,
       salesProduct.product_id,
     ]);
   });
-  const query3 = "DELETE FROM StoreManager.sales WHERE id = ?";
+  const query3 = 'DELETE FROM StoreManager.sales WHERE id = ?';
   const [{ affectedRows: salesAffectedRows }] = await connection.execute(
     query3,
-    [id]
+    [id],
   );
   const successfulDestruction = Boolean(salesAffectedRows);
   return successfulDestruction;

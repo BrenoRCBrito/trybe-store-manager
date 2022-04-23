@@ -1,7 +1,6 @@
-const { isError } = require("joi");
-const Joi = require("joi");
+const Joi = require('joi');
 
-const isJoiError = isError;
+const isJoiError = Joi.isError;
 
 const productsSchema = Joi.object({
   name: Joi.string().min(5).required(),
@@ -10,13 +9,13 @@ const productsSchema = Joi.object({
 const salesSchema = Joi.array().items(
   Joi.object({
     quantity: Joi.number().min(1).required().messages({
-      "number.min": '"quantity" must be greater than or equal to 1',
-      "any.required": '"quantity" is required',
+      'number.min': '"quantity" must be greater than or equal to 1',
+      'any.required': '"quantity" is required',
     }),
     productId: Joi.number()
       .required()
-      .messages({ "any.required": '"productId" is required' }),
-  })
+      .messages({ 'any.required': '"productId" is required' }),
+  }),
 );
 
 const checkProducts = async (body) =>

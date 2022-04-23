@@ -1,13 +1,13 @@
-const { validateBody, isJoiError } = require("../utils/joiSchemas");
+const { validateBody, isJoiError } = require('../utils/joiSchemas');
 
 const formatError = (error) => {
   const status = {
-    "string.min": 422,
-    "string.base": 422,
-    "number.base": 422,
-    "number.integer": 422,
-    "number.min": 422,
-    "any.required": 400,
+    'string.min': 422,
+    'string.base': 422,
+    'number.base': 422,
+    'number.integer': 422,
+    'number.min': 422,
+    'any.required': 400,
   };
   if (isJoiError(error)) {
     return {

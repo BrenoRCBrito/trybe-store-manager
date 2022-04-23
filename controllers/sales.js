@@ -1,16 +1,16 @@
-const salesService = require("../services/sales");
-const productsService = require("../services/products");
+const salesService = require('../services/sales');
+const productsService = require('../services/products');
 
 const validateQuantity = async (req, _res, next) => {
   const products = await Promise.all(
-    req.body.map(async (sale) => productsService.getById(sale.productId))
+    req.body.map(async (sale) => productsService.getById(sale.productId)),
   );
   try {
     products.forEach((product, i) => {
       if (req.body[i].quantity > product.quantity) {
         const quantityError = {
           status: 422,
-          message: "Such amount is not permitted to sell",
+          message: 'Such amount is not permitted to sell',
         };
         throw quantityError;
       }
@@ -31,7 +31,7 @@ const getById = async (req, res, next) => {
   const sales = await salesService.getById(id);
   const [sale] = sales;
   if (!sale) {
-    return next({ status: 404, message: "Sale not found" });
+    return next({ status: 404, message: 'Sale not found' });
   }
   return res.status(200).json(sales);
 };
@@ -54,7 +54,7 @@ const destroy = async (req, res, next) => {
   const { id } = req.params;
   const successfulDestruction = await salesService.destroy(id);
   if (!successfulDestruction) {
-    return next({ status: 404, message: "Sale not found" });
+    return next({ status: 404, message: 'Sale not found' });
   }
   return res.status(204).end();
 };
