@@ -24,8 +24,8 @@ const create = async (sales) => {
   const { insertId: id } = insertedSale;
   const query2 = `INSERT INTO StoreManager.sales_products
    (sale_id, product_id, quantity) VALUES(?, ?, ?)`;
-  sales.forEach(async (sale) => {
-      await connection.execute(query2, [id, sale.productId, sale.quantity]);
+  sales.forEach((sale) => {
+       connection.execute(query2, [id, sale.productId, sale.quantity]);
     const query3 = 'UPDATE StoreManager.products SET quantity = quantity - ? WHERE id = ?';
      connection.execute(query3, [sale.quantity, sale.productId]);
   });
