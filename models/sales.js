@@ -26,8 +26,7 @@ const create = async (sales) => {
    (sale_id, product_id, quantity) VALUES(?, ?, ?)`;
   sales.forEach(async (sale) => {
     await connection.execute(query2, [id, sale.productId, sale.quantity]);
-    const query3 =
-      'UPDATE StoreManager.products SET quantity = quantity - ? WHERE id = ?';
+    const query3 = 'UPDATE StoreManager.products SET quantity = quantity - ? WHERE id = ?';
     await connection.execute(query3, [sale.quantity, sale.productId]);
   });
   return { id, itemsSold: [...sales] };
@@ -45,8 +44,7 @@ const destroy = async (id) => {
   FROM StoreManager.sales_products WHERE sale_id = ?`;
   const [salesProducts] = await connection.execute(query1, [id]);
   salesProducts.forEach(async (salesProduct) => {
-    const query2 =
-      'UPDATE StoreManager.products SET quantity = quantity + ? WHERE id = ?';
+    const query2 = 'UPDATE StoreManager.products SET quantity = quantity + ? WHERE id = ?';
     await connection.execute(query2, [
       salesProduct.quantity,
       salesProduct.product_id,
@@ -55,7 +53,7 @@ const destroy = async (id) => {
   const query3 = 'DELETE FROM StoreManager.sales WHERE id = ?';
   const [{ affectedRows: salesAffectedRows }] = await connection.execute(
     query3,
-    [id]
+    [id],
   );
   const successfulDestruction = Boolean(salesAffectedRows);
   return successfulDestruction;
